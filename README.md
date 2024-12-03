@@ -104,14 +104,12 @@ vi setenv.sh
 
 Software Bill of Materials (SBOMs) provide detailed insights into the components within software, offering transparency and accountability. As regulatory frameworks like the Cyber Resilience Act in Europe, the Digital Operational Resilience Act (DORA), and various cybersecurity standards grow increasingly stringent, ensuring compliance is critical for businesses in regulated sectors.
 
+### How ORAS Facilitates SBOM Verification
 ORAS (OCI Registry As Storage) simplifies SBOM management by allowing SBOMs to be attached directly to OCI container images as artifacts. This enables seamless integration of SBOMs into the software supply chain, ensuring that each image includes a verifiable record of its components. By associating SBOMs with images and enforcing policies that only permit the deployment of images containing SBOMs.
-
-### How ORAS Facilitates SBOM Verification:
-ORAS leverages OCI artifact support to store SBOMs alongside container images within OCI-compliant registries. This means that when you push an image, you can also push its associated SBOM as an artifact, enabling SBOM retrieval and verification directly from the registry. This approach ensures that SBOMs are tightly coupled with the software they describe, simplifying compliance with with NIS Directive, Executive Order 14028, etc.
  
 ## Why Should I integrate SBOMs into my container deployment pipelines/enforce SBOMs via policy?
 
-Integrating SBOMs into your container deployment pipelines ensures that every image has a record of its composition for compliance checks. With tools like ORAS, you can attach SBOMs directly to your OCI images, enabling automated verification before deployment. This provides an auditable trail that demonstrates compliance during security audits.
+By integrating SBOMs into your container deployment pipelines with tools like Snyk and ORAS, you can attach SBOMs directly to your OCI images, enabling automated verification before deployment and providing an auditable trail that demonstrates compliance during security audits.
 
 ## What is ORAS?
 
