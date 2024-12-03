@@ -95,11 +95,6 @@ vi setenv.sh
 
 **Continue with step 3 above.**
 
-## Artifactory ORAS Docs
-
-[Artifactory - Authenticate ORAS](https://jfrog.com/help/r/jfrog-artifactory-documentation/configure-oras-to-work-with-artifactory)
-[Artifactory - Enable Referrers API](https://jfrog.com/help/r/jfrog-artifactory-documentation/use-referrers-rest-api-to-discover-oci-references)
-
 ## Why should I care about SBOMs?
 
 Software Bill of Materials (SBOMs) provide detailed insights into the components within software, offering transparency and accountability. As regulatory frameworks like the Cyber Resilience Act in Europe, the Digital Operational Resilience Act (DORA), and various cybersecurity standards grow increasingly stringent, ensuring compliance is critical for businesses in regulated sectors.
@@ -129,6 +124,11 @@ A common use case for Ratify is integrating it with Gatekeeper as a Kubernetes p
 
 [Learn more about Ratify and SBOM verification](https://ratify.dev/docs/plugins/verifier/sbom#sbom-with-license-and-package-validation).
 
+## Artifactory ORAS Docs
+
+[Artifactory - Authenticate ORAS](https://jfrog.com/help/r/jfrog-artifactory-documentation/configure-oras-to-work-with-artifactory)
+[Artifactory - Enable Referrers API](https://jfrog.com/help/r/jfrog-artifactory-documentation/use-referrers-rest-api-to-discover-oci-references)
+
 ## Prerequisites
 
 Ensure the following tools are installed:
@@ -141,3 +141,4 @@ Ensure the following tools are installed:
   ## Resources
   
   [Demo Workflow](demo-workflow.md)
+  [SBOM Attest Demo Workflow](sbom-attest-demo-workflow.md)
