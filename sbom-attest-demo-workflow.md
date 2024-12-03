@@ -79,7 +79,7 @@ oras discover "docker.io/$IMAGE"
 ## take the SBOM_SHA from the output
 
 ```bash
-export SBOM_SHA=sha256:f8127e5d3477c0eb279a019d36504164f189e513d0740906f0d322129a0d21cc
+export SBOM_SHA=
 ```
 
 ## Pull the SBOM to /artifacts dir
