@@ -23,7 +23,7 @@ docker inspect --format='{{index .RepoDigests 0}}' "docker.io/$REGISTRY_USERNAME
 ```
 
 ```bash
-export IMAGE=iuriikogan/sbom-attest@sha256:dac5651e93d9c236e96c7782ef9f4033d09ff9c81ecd00a2134430886e3881d0
+export IMAGE=
 ```
 
 ## Create an SBOM
