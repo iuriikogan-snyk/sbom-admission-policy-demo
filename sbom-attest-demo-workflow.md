@@ -23,7 +23,7 @@ docker inspect --format='{{index .RepoDigests 0}}' "docker.io/$REGISTRY_USERNAME
 ```
 
 ```bash
-export IMAGE=
+export IMAGE=iuriikogan/sbom-attest@sha256:4aab02c25f770611c8c4a28f6ba4562af2510c4bf0addfbd6b902422ba201b02
 ```
 
 ## Create an SBOM
@@ -53,7 +53,7 @@ notation key ls && notation cert ls
 ## Sign the Image
 
 ```bash
-notation sign "docker.io/$IMAGE"
+notation sign "docker.io/iuriikogan/sbom-attest:v1.0.0"
 ```
 
 ## Authenticate ORAS to docker
@@ -65,7 +65,7 @@ oras login docker.io
 ## Attach the SBOM to the image with ORAS
 
 ```bash
-oras attach "docker.io/$IMAGE" \
+oras attach "docker.io/iuriikogan/sbom-attest:v1.0.0" \
 --artifact-type application/spdx+json \
 bom.spdx.json
 ```
@@ -79,11 +79,12 @@ oras discover "docker.io/$IMAGE"
 ## take the SBOM_SHA from the output
 
 ```bash
-export SBOM_SHA=sha256:f8127e5d3477c0eb279a019d36504164f189e513d0740906f0d322129a0d21cc
+export SBOM_SHA=sha256:f884d8c056698870b2dc8b0ebebeb38af45ab86c07a44aaccab4eeffef954a20 &&
+export SIGNATURE_SHA=sha256:20cd649e4df45156333e5e7003353978b0d63ef6a9a2fae5cffed8d1bcc6496c
 ```
 
 ## Pull the SBOM to /artifacts dir
 
 ```bash
-oras pull "docker.io/$REGISTRY_USERNAME/sbom-attest@$SBOM_SHA" -o ./artifacts
+oras pull "docker.io/iuriikogan/sbom-attest@sha256:a03b0c5621b95d9a2d970d24cd74a31da28198295754f5f4dcbd8276b7e87a86" -o ./artifacts
 ```
