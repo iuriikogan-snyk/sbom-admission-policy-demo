@@ -44,7 +44,7 @@ notation login docker.io
 notation cert generate-test --default "wabbit-networks.io"
 ```
 
-## confirm the key and cert in the trust store
+## Confirm the key and cert in the trust store
 
 ```bash
 notation key ls && notation cert ls
