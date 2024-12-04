@@ -40,9 +40,8 @@ helm install ratify  \
   --set featureFlags.RATIFY_CERT_ROTATION=true \
   --set policy.useRego=true \
   --set oras.authProviders.k8secretsEnabled=true \
-  --set sbom.enabled=true 
-  # --set sbom.notaryProjectSignatureRequired=true \
-  # --set sbom.disallowedLicenses={"MPL"} \
+  --set sbom.enabled=true \
+  --set sbom.notaryProjectSignatureRequired=true
   # --set sbom.maximumAge="24h"
 
 kubectl wait --for=condition=ready pod -l app.kubernetes.io/instance=ratify -n gatekeeper-system --timeout=90s

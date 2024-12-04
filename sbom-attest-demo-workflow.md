@@ -44,7 +44,7 @@ notation login docker.io
 notation cert generate-test --default "wabbit-networks.io"
 ```
 
-## confirm the key and cert in the trust store
+## Confirm the key and cert in the trust store
 
 ```bash
 notation key ls && notation cert ls
@@ -79,6 +79,7 @@ oras discover "docker.io/$IMAGE"
 ## take the SBOM_SHA from the output
 
 ```bash
+export SBOM_SHA=
 export SBOM_SHA=sha256:f884d8c056698870b2dc8b0ebebeb38af45ab86c07a44aaccab4eeffef954a20 &&
 export SIGNATURE_SHA=sha256:20cd649e4df45156333e5e7003353978b0d63ef6a9a2fae5cffed8d1bcc6496c
 ```

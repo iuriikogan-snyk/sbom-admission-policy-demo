@@ -1,0 +1,16 @@
+apiVersion: config.ratify.deislabs.io/v1beta1
+kind: KeyManagementProvider # NamespacedKeyManagementProvider has the same spec.
+metadata:
+  name: Wabbit-Networks
+spec:
+  type: inline
+  parameters:
+    contentType: certificate # REQUIRED: [string] (key, certificate)
+    value: |
+      
+    # REQUIRED: [string] value of content
+status:
+  error: # error message if the operation failed
+  issuccess: # boolean that indicate if operation was successful
+  lastfetchedtime: # timestamp of last attempted fetch operation
+  properties: # provider specific properties of the fetched certificates/keys. If the current fetch operation fails, this property displays the properties of last successfully cached certificate/key
