@@ -5,7 +5,7 @@
 
 # Only export if not already set (optional variables)
 export CLUSTER_NAME="${CLUSTER_NAME:="dev"}"          # Default empty if not set
-export REGISTRY_URL="${REGISTRY_URL:="https://index.docker.io/v1/"}"  # Default empty if not set
+export REGISTRY_URL="${REGISTRY_URL:="docker.io"}"  # Default docker.io if not set
 export REGISTRY_USERNAME="${REGISTRY_USERNAME:=}" # Default empty if not set
 export REGISTRY_PASSWORD=${REGISTRY_PASSWORD:=} # Default empty if not set
 export REGISTRY_EMAIL="${REGISTRY_EMAIL:=}"      # Default empty if not set
