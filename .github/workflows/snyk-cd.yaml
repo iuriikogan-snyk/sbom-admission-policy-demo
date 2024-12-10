@@ -1,0 +1,87 @@
+name: Snyk CD Action
+# Requires DOCKERHUB_USERNAME and DOCKERHUB_TOKEN secrets
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: 
+      - main
+    types: [closed]
+
+env:
+  IMAGE_NAME: nodejs-goof-insights
+  IMAGE_TAG: v2.0.0
+  SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+
+jobs:
+  build:
+    # uncomment next line to only run if PR was merged
+    # if: ${{ github.event.pull_request.merged }}
+    name: Build and push
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v5 
+        with:
+          push: true 
+          platforms: linux/amd64
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Snyk SBOM generate
+        run: |
+          npm install snyk -g
+          snyk auth --auth-type=token $SNYK_TOKEN
+          snyk container sbom --format=spdx2.3+json \
+          ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} > bom.spdx.json
+        continue-on-error: true
+  
+        # Install Notation CLI for signing artifacts (https://github.com/notaryproject/notation)
+      - name: Install Notation and generate a default certificate
+        run: |
+          curl -LO https://github.com/notaryproject/notation/releases/download/v1.2.0/notation_1.2.0\_linux_amd64.tar.gz
+          sudo tar xvzf notation_1.2.0_linux_amd64.tar.gz -C /usr/bin/ notation
+
+          notation cert generate-test --default "wabbit-networks.io"
+          
+          echo ${{ secrets.DOCKERHUB_PASSWORD }} | notation sign "docker.io/${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}" \
+          -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
+
+      - name: Push SBOM and Signature to Registry
+        # Push SBOM and signature to registry using ORAS (https://oras.land/docs/installation)
+        run: |
+          curl -LO "https://github.com/oras-project/oras/releases/download/v1.2.0/oras_1.2.0_darwin_arm64.tar.gz"
+          ls
+          sudo tar xvzf oras_1.2.0_*.tar.gz -C /usr/bin/ oras
+
+          echo ${{ secrets.DOCKERHUB_PASSWORD }} | oras login docker.io -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
+          
+          oras attach ${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} \
+          --artifact-type application/spdx+json \
+          "docker.io/${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}" \
+          bom.spdx.json
+      
+      - name: Snyk Container Monitor
+        run: |
+          snyk container monitor "${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}" \
+          --file=Dockerfile --exclude-app-vulns --platform=linux/amd64 \
+          --tags="component=pkg:${{ github.repository }}@${{ github.ref_name }}" \
+          --org=${{ secrets.SNYK_ORG_ID }} --target-reference=${{ github.repository }}
+
+        continue-on-error: true
