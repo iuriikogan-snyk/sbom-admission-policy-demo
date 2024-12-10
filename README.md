@@ -21,7 +21,7 @@ vi setenv.sh
 2. Deploy the demo:
 
 ```bash
-./scripts/deploy.sh --demo
+.deploy.sh --demo
 ```
 
 3. Run a verified deployment:
