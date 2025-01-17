@@ -14,8 +14,7 @@ env:
 
 jobs:
   build:
-    # uncomment next line to only run if PR was merged
-    # if: ${{ github.event.pull_request.merged }}
+    if: ${{ github.event.pull_request.merged }}
     name: Build and push
     runs-on: ubuntu-latest
 
@@ -53,28 +52,26 @@ jobs:
         continue-on-error: true
   
         # Install Notation CLI for signing artifacts (https://github.com/notaryproject/notation)
-      - name: Install Notation and generate a default certificate
+      - name: Install Notation, generate a cert and sign the image
         run: |
           curl -LO https://github.com/notaryproject/notation/releases/download/v1.2.0/notation_1.2.0\_linux_amd64.tar.gz
           sudo tar xvzf notation_1.2.0_linux_amd64.tar.gz -C /usr/bin/ notation
 
           notation cert generate-test --default "wabbit-networks.io"
           
-          echo ${{ secrets.DOCKERHUB_PASSWORD }} | notation sign "docker.io/${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}" \
-          -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
+          notation sign "docker.io/${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}" \
+          -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_PASSWORD}}
 
       - name: Push SBOM and Signature to Registry
         # Push SBOM and signature to registry using ORAS (https://oras.land/docs/installation)
         run: |
           curl -LO "https://github.com/oras-project/oras/releases/download/v1.2.0/oras_1.2.0_darwin_arm64.tar.gz"
-          ls
           sudo tar xvzf oras_1.2.0_*.tar.gz -C /usr/bin/ oras
 
           echo ${{ secrets.DOCKERHUB_PASSWORD }} | oras login docker.io -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
           
-          oras attach ${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} \
+          oras attach "docker.io/${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}" \
           --artifact-type application/spdx+json \
-          "docker.io/${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}" \
           bom.spdx.json
       
       - name: Snyk Container Monitor
